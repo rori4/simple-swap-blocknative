@@ -1,12 +1,19 @@
 import React from "react"
 import { Button, Center } from "@chakra-ui/react"
-import { useOnboard, useSetup } from "../context/Onboard/Context"
+import { useAddress, useSetup, useWallet } from "../context/Onboard/Context"
+import { shortenAddress } from "../helpers"
 
 export default function App() {
 	const setup = useSetup()
+	const address = useAddress()
+	const wallet = useWallet()
 	return (
 		<Center my={10}>
-			<Button onClick={() => setup()}>Connect Wallet</Button>
+			{wallet ? (
+				<Button onClick={() => setup()}>{shortenAddress(address, 4)}</Button>
+			) : (
+				<Button onClick={() => setup()}>Connect Wallet</Button>
+			)}
 		</Center>
 	)
 }

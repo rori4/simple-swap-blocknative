@@ -9,15 +9,13 @@ const wallets = [{ walletName: "metamask", preferred: true }]
 
 export default function OnboardingProvider({ children }) {
 	const [state, setState] = useState({
-		onboard: null,
 		address: "",
 		balance: "",
 		network: 0,
-		wallet: {},
+		wallet: null,
 		mobileDevice: false,
 		appNetworkId: 0,
 		setup: () => null,
-		provider: () => null,
 	})
 
 	useEffect(() => {
@@ -31,18 +29,20 @@ export default function OnboardingProvider({ children }) {
 			},
 			subscriptions: {
 				address: (address) => {
+					console.log("address", address)
 					setState({ ...state, address })
 				},
 				balance: (balance) => {
+					console.log("balance", balance)
 					setState({ ...state, balance })
 				},
 				network: (network) => {
+					console.log("network", network)
 					setState({ ...state, network })
 				},
 				wallet: (wallet) => {
-					console.log(wallet)
-					const provider = new ethers.providers.Web3Provider(wallet.provider)
-					setState({ ...state, wallet, provider })
+					console.log("wallet", wallet)
+					setState({ ...state, wallet })
 				},
 			},
 		}
@@ -61,6 +61,7 @@ export default function OnboardingProvider({ children }) {
 				const ready = await onboard.walletCheck()
 				if (ready) {
 					const walletState = onboard.getState()
+					console.log("walletState", walletState)
 					setState({ ...state, ...walletState })
 					console.log(walletState)
 				} else {

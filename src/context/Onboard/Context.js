@@ -1,3 +1,4 @@
+import { ethers } from "ethers"
 import { createContext, useContext } from "react"
 
 export const OnboardContext = createContext({})
@@ -50,8 +51,8 @@ export const useSigner = () => {
 	const provider = useWalletProvider()
 	const network = useNetwork()
 	if (network && provider) {
-		// const signer = new Web3Provider(provider).getSigner()
-		// return signer
+		const signer = new ethers.providers.Web3Provider(provider).getSigner()
+		return signer
 	}
 	return {}
 }
