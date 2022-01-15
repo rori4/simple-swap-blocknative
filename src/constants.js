@@ -10,4 +10,6 @@ export const tokensToCheckMapping = {
 	},
 }
 
+export const RPC_PROVIDER_URL =
+	"https://mainnet.infura.io/v3/7cefc861be7a4cf78e4f40588802a087"
 export const arrayOfTokensToCheck = Object.keys(tokensToCheckMapping)
