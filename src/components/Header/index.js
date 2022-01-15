@@ -1,11 +1,22 @@
 import { CloseButton } from "@chakra-ui/close-button"
-import { Box, Flex, HStack, Link, VStack } from "@chakra-ui/layout"
+import {
+	Box,
+	Flex,
+	Heading,
+	HStack,
+	Link,
+	Text,
+	VStack,
+} from "@chakra-ui/layout"
 import { useViewportScroll } from "framer-motion"
 import React from "react"
 import { Button, IconButton, Icon } from "@chakra-ui/react"
 import { AiFillGithub, AiOutlineMenu, AiFillSwitcher } from "react-icons/ai"
 import { chakra } from "@chakra-ui/react"
 import ConnectCTA from "../ConnectCTA"
+import ETHLogo from "../../icons/ETHIcon"
+import BalanceBox from "../BalanceBox"
+import { DAIIcon } from "../../icons"
 const { useColorMode, useColorModeValue } = require("@chakra-ui/color-mode")
 const { useDisclosure } = require("@chakra-ui/hooks")
 
@@ -52,7 +63,17 @@ function Header() {
 							maxW="824px"
 							align="center"
 							color="gray.400"
+							gap="8px"
 						>
+							<BalanceBox Icon={ETHLogo} />
+							<BalanceBox Icon={DAIIcon} />
+							{/* <BalanceBox Icon={DA} /> */}
+							{/* <Box px="4" py="2" borderRadius="base" background="ButtonFace">
+								<ETHLogo width="25px" height="25px" />
+							</Box>
+							<Box px="4" py="2" borderRadius="base" background="ButtonFace">
+								<ETHLogo width="25px" height="25px" />
+							</Box> */}
 							<ConnectCTA />
 						</Flex>
 					</Flex>
