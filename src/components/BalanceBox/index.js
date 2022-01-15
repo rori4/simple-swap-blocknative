@@ -1,9 +1,10 @@
 import { Box, Text } from "@chakra-ui/layout"
 import React from "react"
-import { useTokenBalances } from "../../context/Onboard/Context"
+import { useTokenBalances, useWallet } from "../../context/Onboard/Context"
 
 function BalanceBox({ Icon, token }) {
 	const tokenBalances = useTokenBalances()
+	const wallet = useWallet()
 	return (
 		<Box
 			display="flex"
@@ -15,7 +16,7 @@ function BalanceBox({ Icon, token }) {
 		>
 			<Icon width="25px" height="25px" />
 			<Text fontSize="md">
-				{tokenBalances?.[token]
+				{tokenBalances?.[token] && wallet
 					? Number(tokenBalances?.[token]).toFixed(4)
 					: "-"}
 			</Text>
