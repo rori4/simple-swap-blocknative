@@ -32,7 +32,6 @@ const GET_PAIR_SWAPS = gql`
 `
 
 function LastSwapsTable({ pair }) {
-	const [, updateState] = React.useState()
 	const { loading, error, data, refetch, networkStatus } = useQuery(
 		GET_PAIR_SWAPS,
 		{
@@ -72,7 +71,7 @@ function LastSwapsTable({ pair }) {
 				<Box>
 					<Flex justifyContent="space-between">
 						<Heading fontSize="3xl" mb={4}>
-							Latest ETH / DAI swaps
+							Latest WETH / DAI swaps
 						</Heading>
 						{networkStatus === NetworkStatus.refetch ? (
 							<Spinner />
