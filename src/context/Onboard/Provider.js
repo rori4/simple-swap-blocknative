@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react"
 import Onboard from "bnc-onboard"
 import { BNC_API_KEY } from "../../constants"
 import { OnboardContext } from "./Context"
-import { ethers } from "ethers"
+
 const walletChecks = [{ checkName: "connect" }, { checkName: "network" }]
 
 const wallets = [{ walletName: "metamask", preferred: true }]
 
 export default function OnboardingProvider({ children }) {
+	const [onboard, setOnboard] = useState()
 	const [state, setState] = useState({
 		address: "",
 		balance: "",
@@ -46,14 +47,13 @@ export default function OnboardingProvider({ children }) {
 				},
 			},
 		}
-
 		const onboard = Onboard(initialization)
-		setState({ ...state, onboard, setup })
+		setState({ ...state, setup })
+		setOnboard(onboard)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const setup = async (defaultWallet) => {
-		const { onboard } = state
 		console.log("STATE", state)
 		try {
 			const selected = await onboard.walletSelect(defaultWallet)
@@ -76,7 +76,7 @@ export default function OnboardingProvider({ children }) {
 	}
 
 	return (
-		<OnboardContext.Provider value={{ ...state, setup: setup }}>
+		<OnboardContext.Provider value={{ ...state, setup, onboard }}>
 			{children}
 		</OnboardContext.Provider>
 	)
