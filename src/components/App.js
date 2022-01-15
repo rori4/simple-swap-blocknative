@@ -1,16 +1,15 @@
 import React from "react"
 import { Center } from "@chakra-ui/react"
 import Header from "./Header"
-import { useColorModeValue } from "@chakra-ui/react"
 import Swap from "./Swap"
 
 export default function App() {
 	return (
-		<>
+		<React.Fragment>
 			<Header />
-			<Center height="auto" bg={useColorModeValue("#F9FAFB", "gray.600")}>
+			<Center>
 				<Swap />
 			</Center>
-		</>
+		</React.Fragment>
 	)
 }

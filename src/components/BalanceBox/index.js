@@ -15,7 +15,7 @@ function BalanceBox({ Icon, token }) {
 			gap="8px"
 		>
 			<Icon width="25px" height="25px" />
-			<Text fontSize="md">
+			<Text fontSize="md" color="black">
 				{tokenBalances?.[token] && wallet
 					? Number(tokenBalances?.[token]).toFixed(4)
 					: "-"}
