@@ -17,6 +17,7 @@ import ConnectCTA from "../ConnectCTA"
 import ETHLogo from "../../icons/ETHIcon"
 import BalanceBox from "../BalanceBox"
 import { DAIIcon, USDCIcon } from "../../icons"
+import { arrayOfTokensToCheck, MAIN_TOKEN_ADDRESS } from "../../constants"
 const { useColorMode, useColorModeValue } = require("@chakra-ui/color-mode")
 const { useDisclosure } = require("@chakra-ui/hooks")
 
@@ -65,9 +66,9 @@ function Header() {
 							color="gray.400"
 							gap="8px"
 						>
-							<BalanceBox Icon={ETHLogo} />
-							<BalanceBox Icon={DAIIcon} />
-							<BalanceBox Icon={USDCIcon} />
+							<BalanceBox Icon={ETHLogo} token={MAIN_TOKEN_ADDRESS} />
+							<BalanceBox Icon={DAIIcon} token={arrayOfTokensToCheck[0]} />
+							<BalanceBox Icon={USDCIcon} token={arrayOfTokensToCheck[1]} />
 							<ConnectCTA />
 						</Flex>
 					</Flex>

@@ -27,6 +27,11 @@ export const useWalletBalance = () => {
 	return balance
 }
 
+export const useTokenBalances = () => {
+	const { tokenBalances } = useOnboardContext()
+	return tokenBalances
+}
+
 export const useWallet = () => {
 	const { wallet } = useOnboardContext()
 	return wallet
