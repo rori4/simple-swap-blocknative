@@ -1,10 +1,10 @@
 import React from "react"
-import { Button } from "@chakra-ui/react"
+import { Button, Center } from "@chakra-ui/react"
 
 export default function App() {
 	return (
-		<div>
-			<Button>Test</Button>
-		</div>
+		<Center my={10}>
+			<Button>Connect Wallet</Button>
+		</Center>
 	)
 }
