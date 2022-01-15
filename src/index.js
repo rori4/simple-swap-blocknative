@@ -24,7 +24,19 @@ const config = {
 	useSystemColorMode: false,
 }
 
-const theme = extendTheme({ colors, config })
+const styles = {
+	global: {
+		"html, body": {
+			background: "gray.600",
+			lineHeight: "tall",
+		},
+		a: {
+			color: "teal.500",
+		},
+	},
+}
+
+const theme = extendTheme({ colors, config, styles })
 
 ReactDOM.render(
 	<React.StrictMode>
