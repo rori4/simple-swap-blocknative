@@ -8,13 +8,9 @@ function ConnectCTA() {
 	const address = useAddress()
 	const wallet = useWallet()
 	return (
-		<div>
-			{wallet ? (
-				<Button onClick={() => setup()}>{shortenAddress(address, 4)}</Button>
-			) : (
-				<Button onClick={() => setup()}>Connect Wallet</Button>
-			)}
-		</div>
+		<Button minW={150} onClick={() => setup()}>
+			{wallet ? shortenAddress(address, 4) : "Connect Wallet"}
+		</Button>
 	)
 }
 
