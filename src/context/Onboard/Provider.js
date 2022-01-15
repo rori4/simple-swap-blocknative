@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import Onboard from "bnc-onboard"
 import { BNC_API_KEY } from "../../constants"
 import { OnboardContext } from "./Context"
@@ -23,6 +23,7 @@ export default function OnboardingProvider({ children }) {
 		wallet: null,
 		mobileDevice: false,
 		appNetworkId: 0,
+		mainTokenBalance: null,
 		setup: () => null,
 	})
 
@@ -37,22 +38,24 @@ export default function OnboardingProvider({ children }) {
 			},
 			subscriptions: {
 				address: (address) => {
-					console.log("address", address)
+					// console.log("address", address)
 					setState({ ...state, address })
 				},
 				balance: (balance) => {
-					console.log("balance", balance)
+					// console.log("balance", balance)
+					const formattedBalance = ethers.utils.formatEther(balance)
 					setTokenBalances({
-						[MAIN_TOKEN_ADDRESS]: ethers.utils.formatEther(balance),
+						...tokenBalances,
+						[MAIN_TOKEN_ADDRESS]: formattedBalance,
 					})
+					setState({ ...state, mainTokenBalance: formattedBalance })
 				},
 				network: (network) => {
-					console.log("network", network)
+					// console.log("network", network)
 					setState({ ...state, network })
 				},
 				wallet: (wallet) => {
-					console.log("wallet", wallet)
-					window.localStorage.setItem("selectedWallet", wallet.name)
+					// console.log("wallet", wallet)
 					const provider = new ethers.providers.Web3Provider(wallet.provider)
 					setProvider(provider)
 					setState({ ...state, wallet })
@@ -62,64 +65,56 @@ export default function OnboardingProvider({ children }) {
 		const onboard = Onboard(initialization)
 		setState({ ...state, setup })
 		setOnboard(onboard)
-		onLoad(onboard)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	useEffect(() => {
-		async function checkBalances() {
-			if (state.address && state.wallet) {
-				const tokenBalancesPromises = arrayOfTokensToCheck.map((token) =>
-					checkTokenBalance(token)
-				)
-				const balances = await Promise.all(tokenBalancesPromises)
-				let ERC20tokenBalances = {}
-				for (let i = 0; i < balances.length; i++) {
-					const balance = balances[i]
-					const tokenAddress = arrayOfTokensToCheck[i]
-					ERC20tokenBalances[tokenAddress] = ethers.utils.formatUnits(
-						balance,
-						tokensToCheckMapping[tokenAddress].decimals
-					)
-				}
-				setTokenBalances({ ...tokenBalances, ...ERC20tokenBalances })
+	const checkTokenBalance = useCallback(
+		(token) => {
+			if (state.address && provider) {
+				const tokenContract = new ethers.Contract(token, ERC20_ABI, provider)
+				return tokenContract.balanceOf(state.address)
 			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[provider, state.address]
+	)
+
+	const checkBalances = async () => {
+		if (state.address) {
+			const tokenBalancesPromises = arrayOfTokensToCheck.map((token) =>
+				checkTokenBalance(token)
+			)
+			const balances = await Promise.all(tokenBalancesPromises)
+			let ERC20tokenBalances = {}
+			for (let i = 0; i < balances.length; i++) {
+				const balance = balances[i]
+				const tokenAddress = arrayOfTokensToCheck[i]
+				ERC20tokenBalances[tokenAddress] = ethers.utils.formatUnits(
+					balance,
+					tokensToCheckMapping[tokenAddress].decimals
+				)
+			}
+			setTokenBalances({ ...tokenBalances, ...ERC20tokenBalances })
 		}
-		checkBalances()
+	}
+
+	useEffect(() => {
+		if (state.address && state.wallet) checkBalances()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state.address, state.wallet])
 
 	useEffect(() => {
-		console.log(tokenBalances)
+		if (tokenBalances) console.log(tokenBalances)
 	}, [tokenBalances])
 
-	const checkTokenBalance = async (token) => {
-		if (state.address && state.wallet && provider) {
-			const tokenContract = new ethers.Contract(token, ERC20_ABI, provider)
-			return tokenContract.balanceOf(state.address)
-		}
-	}
-
-	const onLoad = async (onboard) => {
-		// get the selectedWallet value from local storage
-		const previouslySelectedWallet =
-			window.localStorage.getItem("selectedWallet")
-		// call wallet select with that value if it exists
-		if (previouslySelectedWallet != null) {
-			await onboard.walletSelect(previouslySelectedWallet)
-		}
-	}
-
 	const setup = async (defaultWallet) => {
-		console.log("STATE", state)
 		try {
 			const selected = await onboard.walletSelect(defaultWallet)
 			if (selected) {
 				const ready = await onboard.walletCheck()
 				if (ready) {
 					const walletState = onboard.getState()
-					console.log("walletState", walletState)
 					setState({ ...state, ...walletState })
-					console.log(walletState)
 				} else {
 					// Connection to wallet failed
 				}
