@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react"
 import Onboard from "bnc-onboard"
 import { BNC_API_KEY } from "../../constants"
 import { OnboardContext } from "./Context"
-
+import { ERC20_ABI } from "../../abis"
+import { ethers } from "ethers"
+import {
+	MAIN_TOKEN_ADDRESS,
+	tokensToCheckMapping,
+	arrayOfTokensToCheck,
+} from "../../constants"
 const walletChecks = [{ checkName: "connect" }, { checkName: "network" }]
 
 const wallets = [{ walletName: "metamask", preferred: true }]
 
 export default function OnboardingProvider({ children }) {
 	const [onboard, setOnboard] = useState()
+	const [provider, setProvider] = useState()
+	const [tokenBalances, setTokenBalances] = useState()
 	const [state, setState] = useState({
 		address: "",
-		balance: "",
 		network: 0,
 		wallet: null,
 		mobileDevice: false,
@@ -35,7 +42,9 @@ export default function OnboardingProvider({ children }) {
 				},
 				balance: (balance) => {
 					console.log("balance", balance)
-					setState({ ...state, balance })
+					setTokenBalances({
+						[MAIN_TOKEN_ADDRESS]: ethers.utils.formatEther(balance),
+					})
 				},
 				network: (network) => {
 					console.log("network", network)
@@ -44,6 +53,8 @@ export default function OnboardingProvider({ children }) {
 				wallet: (wallet) => {
 					console.log("wallet", wallet)
 					window.localStorage.setItem("selectedWallet", wallet.name)
+					const provider = new ethers.providers.Web3Provider(wallet.provider)
+					setProvider(provider)
 					setState({ ...state, wallet })
 				},
 			},
@@ -54,6 +65,39 @@ export default function OnboardingProvider({ children }) {
 		onLoad(onboard)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		async function checkBalances() {
+			if (state.address && state.wallet) {
+				const tokenBalancesPromises = arrayOfTokensToCheck.map((token) =>
+					checkTokenBalance(token)
+				)
+				const balances = await Promise.all(tokenBalancesPromises)
+				let ERC20tokenBalances = {}
+				for (let i = 0; i < balances.length; i++) {
+					const balance = balances[i]
+					const tokenAddress = arrayOfTokensToCheck[i]
+					ERC20tokenBalances[tokenAddress] = ethers.utils.formatUnits(
+						balance,
+						tokensToCheckMapping[tokenAddress].decimals
+					)
+				}
+				setTokenBalances({ ...tokenBalances, ...ERC20tokenBalances })
+			}
+		}
+		checkBalances()
+	}, [state.address, state.wallet])
+
+	useEffect(() => {
+		console.log(tokenBalances)
+	}, [tokenBalances])
+
+	const checkTokenBalance = async (token) => {
+		if (state.address && state.wallet && provider) {
+			const tokenContract = new ethers.Contract(token, ERC20_ABI, provider)
+			return tokenContract.balanceOf(state.address)
+		}
+	}
 
 	const onLoad = async (onboard) => {
 		// get the selectedWallet value from local storage
@@ -88,7 +132,9 @@ export default function OnboardingProvider({ children }) {
 	}
 
 	return (
-		<OnboardContext.Provider value={{ ...state, setup, onboard }}>
+		<OnboardContext.Provider
+			value={{ ...state, setup, onboard, provider, tokenBalances }}
+		>
 			{children}
 		</OnboardContext.Provider>
 	)

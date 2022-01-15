@@ -16,7 +16,7 @@ import { chakra } from "@chakra-ui/react"
 import ConnectCTA from "../ConnectCTA"
 import ETHLogo from "../../icons/ETHIcon"
 import BalanceBox from "../BalanceBox"
-import { DAIIcon } from "../../icons"
+import { DAIIcon, USDCIcon } from "../../icons"
 const { useColorMode, useColorModeValue } = require("@chakra-ui/color-mode")
 const { useDisclosure } = require("@chakra-ui/hooks")
 
@@ -67,13 +67,7 @@ function Header() {
 						>
 							<BalanceBox Icon={ETHLogo} />
 							<BalanceBox Icon={DAIIcon} />
-							{/* <BalanceBox Icon={DA} /> */}
-							{/* <Box px="4" py="2" borderRadius="base" background="ButtonFace">
-								<ETHLogo width="25px" height="25px" />
-							</Box>
-							<Box px="4" py="2" borderRadius="base" background="ButtonFace">
-								<ETHLogo width="25px" height="25px" />
-							</Box> */}
+							<BalanceBox Icon={USDCIcon} />
 							<ConnectCTA />
 						</Flex>
 					</Flex>
