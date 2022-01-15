@@ -43,6 +43,7 @@ export default function OnboardingProvider({ children }) {
 				},
 				wallet: (wallet) => {
 					console.log("wallet", wallet)
+					window.localStorage.setItem("selectedWallet", wallet.name)
 					setState({ ...state, wallet })
 				},
 			},
@@ -50,8 +51,19 @@ export default function OnboardingProvider({ children }) {
 		const onboard = Onboard(initialization)
 		setState({ ...state, setup })
 		setOnboard(onboard)
+		onLoad(onboard)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	const onLoad = async (onboard) => {
+		// get the selectedWallet value from local storage
+		const previouslySelectedWallet =
+			window.localStorage.getItem("selectedWallet")
+		// call wallet select with that value if it exists
+		if (previouslySelectedWallet != null) {
+			await onboard.walletSelect(previouslySelectedWallet)
+		}
+	}
 
 	const setup = async (defaultWallet) => {
 		console.log("STATE", state)
