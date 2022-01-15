@@ -13,3 +13,8 @@ export const tokensToCheckMapping = {
 export const RPC_PROVIDER_URL =
 	"https://mainnet.infura.io/v3/7cefc861be7a4cf78e4f40588802a087"
 export const arrayOfTokensToCheck = Object.keys(tokensToCheckMapping)
+
+export const UNISWAP_GRAPHQL_ENDPOINT =
+	"https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+
+export const ETH_DAI_PAIR = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"

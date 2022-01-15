@@ -4,6 +4,8 @@ import App from "./components/App"
 import reportWebVitals from "./reportWebVitals"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import OnboardingProvider from "./context/Onboard/Provider"
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
+import { UNISWAP_GRAPHQL_ENDPOINT } from "./constants"
 
 const colors = {
 	brand: {
@@ -36,14 +38,38 @@ const styles = {
 	},
 }
 
-const theme = extendTheme({ colors, config, styles })
+const components = {
+	Badge: {
+		baseStyle: {
+			display: "flex",
+			justifyContent: "center",
+			alignItems: "center",
+			borderRadius: "base",
+		},
+		sizes: {
+			xl: {
+				h: "24px",
+				fontSize: "md",
+			},
+		},
+	},
+}
+
+const theme = extendTheme({ colors, config, styles, components })
+
+const client = new ApolloClient({
+	cache: new InMemoryCache(),
+	uri: UNISWAP_GRAPHQL_ENDPOINT,
+})
 
 ReactDOM.render(
 	<React.StrictMode>
 		<ChakraProvider theme={theme}>
-			<OnboardingProvider>
-				<App />
-			</OnboardingProvider>
+			<ApolloProvider client={client}>
+				<OnboardingProvider>
+					<App />
+				</OnboardingProvider>
+			</ApolloProvider>
 		</ChakraProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
