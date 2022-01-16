@@ -1,4 +1,5 @@
-import { Box, Flex, Link } from "@chakra-ui/layout"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Box, Flex } from "@chakra-ui/layout"
 import React, { useState, useEffect } from "react"
 import { useColorModeValue } from "@chakra-ui/react"
 import {

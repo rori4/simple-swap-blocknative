@@ -1,31 +1,15 @@
-import { CloseButton } from "@chakra-ui/close-button"
-import {
-	Box,
-	Flex,
-	Heading,
-	HStack,
-	Link,
-	Text,
-	VStack,
-} from "@chakra-ui/layout"
+import { Box, Flex, HStack, Link } from "@chakra-ui/layout"
 import { useViewportScroll } from "framer-motion"
 import React from "react"
-import { Button, IconButton, Icon } from "@chakra-ui/react"
-import { AiFillGithub, AiOutlineMenu, AiFillSwitcher } from "react-icons/ai"
 import { chakra } from "@chakra-ui/react"
 import ConnectCTA from "../ConnectCTA"
 import ETHLogo from "../../icons/ETHIcon"
 import BalanceBox from "../BalanceBox"
 import { DAIIcon, USDCIcon } from "../../icons"
 import { arrayOfTokensToCheck, MAIN_TOKEN_ADDRESS } from "../../constants"
-const { useColorMode, useColorModeValue } = require("@chakra-ui/color-mode")
-const { useDisclosure } = require("@chakra-ui/hooks")
+const { useColorModeValue } = require("@chakra-ui/color-mode")
 
 function Header() {
-	const mobileNav = useDisclosure()
-
-	const { toggleColorMode: toggleMode } = useColorMode()
-	const text = useColorModeValue("dark", "light")
 	// const SwitchIcon = useColorModeValue(FaMoon, FaSun)
 
 	const bg = useColorModeValue("white", "gray.800")

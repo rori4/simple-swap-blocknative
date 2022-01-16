@@ -1,7 +1,7 @@
 import { Badge, Flex, Heading, Link } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import React, { useEffect, useState } from "react"
-import { Spinner, Text, Box, Button, useColorModeValue } from "@chakra-ui/react"
+import { Spinner, Text, Box, Button } from "@chakra-ui/react"
 import { gql, NetworkStatus, useQuery } from "@apollo/client"
 import moment from "moment"
 import { AiOutlineSearch } from "react-icons/ai"
