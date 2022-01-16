@@ -23,6 +23,12 @@ import {
 } from "@uniswap/sdk"
 import { ethers } from "ethers"
 import { RPC_PROVIDER_URL } from "../../constants"
+import {
+	useSetup,
+	useTokenBalances,
+	useWallet,
+	useWalletBalance,
+} from "../../context/Onboard/Context"
 
 const DAI = new Token(
 	ChainId.MAINNET,
@@ -31,8 +37,16 @@ const DAI = new Token(
 )
 
 function Swap() {
+	const wallet = useWallet()
+	const setup = useSetup()
+	const ethBalance = useWalletBalance()
+	const [validAmountCheck, setValidAmountCheck] = useState(null)
 	const [inputAmount, setInputAmount] = useState(0)
 	const [parsedAmountOutMin, setParsedAmountOutMin] = useState(0)
+	const [amountOutMin, setAmountOutMin] = useState()
+	const [path, setPath] = useState()
+	const [deadline, setDeadline] = useState()
+	const [value, setValue] = useState()
 
 	useEffect(() => {
 		const intervalId = setInterval(async () => {
@@ -45,6 +59,13 @@ function Swap() {
 	useEffect(() => {
 		fetchPrices()
 	}, [inputAmount])
+
+	const handleInput = (e) => {
+		setInputAmount(e.target.value)
+		console.log(ethBalance)
+		console.log(e.target.value)
+		setValidAmountCheck(Number(e.target.value) <= Number(ethBalance))
+	}
 
 	const fetchPrices = async () => {
 		if (inputAmount > 0) {
@@ -65,13 +86,15 @@ function Swap() {
 
 			const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
 			const parsedAmount = ethers.utils.formatUnits(amountOutMin.toString(), 18)
-			setParsedAmountOutMin(parsedAmount)
 			const path = [WETH[DAI.chainId].address, DAI.address]
-			const to = "" // should be a checksummed recipient address
+			// const to = "" // should be a checksummed recipient address
 			const deadline = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from the current Unix time
 			const value = trade.inputAmount.raw // needs to be converted to e.g. hex
-
-			//TODO: execute call
+			setParsedAmountOutMin(parsedAmount)
+			setAmountOutMin(amountOutMin)
+			setPath(path)
+			setDeadline(deadline)
+			setValue(value)
 		}
 	}
 
@@ -106,8 +129,10 @@ function Swap() {
 					<InputGroup size="lg">
 						<Input
 							type="number"
+							focusBorderColor={validAmountCheck ? null : "red.400"}
+							isInvalid={validAmountCheck === false}
 							placeholder="0.0"
-							onChange={(e) => setInputAmount(e.target.value)}
+							onChange={handleInput}
 						/>
 						<InputRightAddon
 							w="120"
@@ -121,6 +146,7 @@ function Swap() {
 							type="number"
 							placeholder="0.0"
 							disabled
+							isReadOnly
 							value={parsedAmountOutMin}
 						/>
 						<InputRightAddon
@@ -132,10 +158,15 @@ function Swap() {
 					</InputGroup>
 				</Box>
 				<Box mt={6} w="full">
-					{/* CONNECT OR SWAP */}
-					<Button w="full" size="lg">
-						SWAP
-					</Button>
+					{wallet ? (
+						<Button w="full" size="lg" disabled={!validAmountCheck}>
+							SWAP
+						</Button>
+					) : (
+						<Button w="full" size="lg" onClick={() => setup()}>
+							CONNECT WALLET
+						</Button>
+					)}
 				</Box>
 			</Box>
 		</Flex>

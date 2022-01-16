@@ -1,5 +1,6 @@
 import { ethers } from "ethers"
 import { createContext, useContext } from "react"
+import { MAIN_TOKEN_ADDRESS } from "../../constants"
 
 export const OnboardContext = createContext({})
 
@@ -23,8 +24,8 @@ export const useAddress = () => {
 }
 
 export const useWalletBalance = () => {
-	const { balance } = useOnboardContext()
-	return balance
+	const { tokenBalances } = useOnboardContext()
+	return tokenBalances?.[MAIN_TOKEN_ADDRESS]
 }
 
 export const useTokenBalances = () => {
