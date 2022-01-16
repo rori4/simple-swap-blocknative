@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { gql, useQuery } from "@apollo/client"
 import { chakra, useColorModeValue } from "@chakra-ui/system"
-import { Box, Flex, HStack } from "@chakra-ui/layout"
-import { StarIcon } from "@chakra-ui/icons"
-import { formatCurrency, getCurrencyFormatNumbersOnly } from "../../helpers"
+import { Box, Flex } from "@chakra-ui/layout"
+import { formatCurrency } from "../../helpers"
 import { Spinner } from "@chakra-ui/react"
 
 const GET_PAIR_DATA = gql`
@@ -24,7 +23,11 @@ const GET_PAIR_DATA = gql`
 `
 
 function PoolStats({ pair }) {
-	const { loading, data, refetch, networkStatus } = useQuery(GET_PAIR_DATA, {
+	const {
+		loading,
+		data,
+		// refetch, networkStatus
+	} = useQuery(GET_PAIR_DATA, {
 		variables: { pair },
 		notifyOnNetworkStatusChange: true,
 	})
