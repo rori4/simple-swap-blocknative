@@ -163,7 +163,7 @@ function Swap() {
 	}
 
 	return (
-		<Flex p={50} w="full" alignItems="center" justifyContent="center">
+		<Flex alignItems="center" justifyContent="center">
 			<Box
 				mx="auto"
 				px={8}

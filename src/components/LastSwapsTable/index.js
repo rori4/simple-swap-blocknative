@@ -57,8 +57,7 @@ function LastSwapsTable({ pair }) {
 	return (
 		<Flex
 			w="full"
-			bg="gray.600"
-			p={50}
+			// p={[4, 4, 50]}
 			alignItems="center"
 			justifyContent="center"
 		>
@@ -86,7 +85,7 @@ function LastSwapsTable({ pair }) {
 					<Table
 						w="full"
 						borderRadius="md"
-						bg={"gray.700"}
+						bg={"gray.800"}
 						display={{
 							base: "block",
 							md: "table",
