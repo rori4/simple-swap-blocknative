@@ -95,7 +95,6 @@ function Swap() {
 					UNISWAP_V2_ROUTER_ABI,
 					signer
 				)
-				console.log(amountOutMin.toString(), path, address, deadline)
 				const tx = await routerContract.swapExactETHForTokens(
 					amountOutMin.toString(),
 					path,

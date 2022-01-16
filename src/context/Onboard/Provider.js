@@ -38,11 +38,9 @@ export default function OnboardingProvider({ children }) {
 			},
 			subscriptions: {
 				address: (address) => {
-					// console.log("address", address)
 					setState({ ...state, address })
 				},
 				balance: (balance) => {
-					// console.log("balance", balance)
 					const formattedBalance = ethers.utils.formatEther(balance)
 					setTokenBalances({
 						...tokenBalances,
@@ -51,11 +49,9 @@ export default function OnboardingProvider({ children }) {
 					setState({ ...state, mainTokenBalance: formattedBalance })
 				},
 				network: (network) => {
-					// console.log("network", network)
 					setState({ ...state, network })
 				},
 				wallet: (wallet) => {
-					// console.log("wallet", wallet)
 					const provider = new ethers.providers.Web3Provider(wallet.provider)
 					setProvider(provider)
 					setState({ ...state, wallet })
@@ -103,10 +99,6 @@ export default function OnboardingProvider({ children }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state.address, state.wallet])
 
-	useEffect(() => {
-		if (tokenBalances) console.log(tokenBalances)
-	}, [tokenBalances])
-
 	const setup = async (defaultWallet) => {
 		try {
 			const selected = await onboard.walletSelect(defaultWallet)
@@ -122,7 +114,7 @@ export default function OnboardingProvider({ children }) {
 				// User aborted set up
 			}
 		} catch (error) {
-			console.log("error onboarding", error)
+			console.error("error onboarding", error)
 		}
 	}
 
