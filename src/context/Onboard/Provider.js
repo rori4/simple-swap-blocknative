@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"
 import Onboard from "bnc-onboard"
-import { BNC_API_KEY } from "../../constants"
+import {
+	BNC_API_KEY,
+	INFURA_PROJECT_ID,
+	RPC_PROVIDER_URL,
+} from "../../constants"
 import { OnboardContext } from "./Context"
 import { ERC20_ABI } from "../../abis"
 import { ethers } from "ethers"
@@ -11,7 +15,27 @@ import {
 } from "../../constants"
 const walletChecks = [{ checkName: "connect" }, { checkName: "network" }]
 
-const wallets = [{ walletName: "metamask", preferred: true }]
+const wallets = [
+	{ walletName: "metamask", preferred: true },
+	{
+		walletName: "walletLink",
+		preferred: true,
+		rpcUrl: RPC_PROVIDER_URL,
+	},
+	{
+		walletName: "walletConnect",
+		preferred: true,
+		infuraKey: INFURA_PROJECT_ID,
+	},
+	{ walletName: "metamask", preferred: true },
+	{ walletName: "authereum", preferred: true },
+	{ walletName: "trust", preferred: true },
+	{ walletName: "opera", preferred: true },
+	{ walletName: "coinbase", preferred: true },
+	{ walletName: "operaTouch", preferred: true },
+	{ walletName: "status", preferred: true },
+	{ walletName: "torus", preferred: true },
+]
 
 export default function OnboardingProvider({ children }) {
 	const [onboard, setOnboard] = useState()
@@ -41,7 +65,7 @@ export default function OnboardingProvider({ children }) {
 					setState({ ...state, address })
 				},
 				balance: (balance) => {
-					const formattedBalance = ethers.utils.formatEther(balance)
+					const formattedBalance = ethers.utils.formatEther(balance || 0)
 					setTokenBalances({
 						...tokenBalances,
 						[MAIN_TOKEN_ADDRESS]: formattedBalance,

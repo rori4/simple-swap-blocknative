@@ -80,7 +80,9 @@ function Swap() {
 	}
 
 	const checkValid = () => {
-		setValidAmountCheck(Number(inputAmount) <= Number(ethBalance))
+		setValidAmountCheck(
+			Number(inputAmount) <= Number(ethBalance) && Number(inputAmount) !== 0
+		)
 	}
 
 	useEffect(() => {
