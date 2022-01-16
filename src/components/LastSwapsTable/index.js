@@ -104,7 +104,7 @@ function LastSwapsTable({ pair }) {
 						<Thead
 							display={{
 								base: "none",
-								md: "table-header-group",
+								lg: "table-header-group",
 							}}
 							sx={{
 								"@media print": {
@@ -135,7 +135,7 @@ function LastSwapsTable({ pair }) {
 										key={tid}
 										display={{
 											base: "grid",
-											md: "table-row",
+											lg: "table-row",
 										}}
 										sx={{
 											"@media print": {

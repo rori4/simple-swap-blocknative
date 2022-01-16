@@ -77,27 +77,36 @@ function Swap() {
 
 	const handleInput = (e) => {
 		setInputAmount(e.target.value)
-		console.log(ethBalance)
-		console.log(e.target.value)
-		setValidAmountCheck(Number(e.target.value) <= Number(ethBalance))
 	}
+
+	const checkValid = () => {
+		setValidAmountCheck(Number(inputAmount) <= Number(ethBalance))
+	}
+
+	useEffect(() => {
+		if (wallet) checkValid()
+	}, [inputAmount, wallet])
 
 	const handleSwap = async () => {
 		if (address) {
-			const routerContract = new ethers.Contract(
-				UNISWAP_ROUTER_ADDRESS,
-				UNISWAP_V2_ROUTER_ABI,
-				signer
-			)
-			console.log(amountOutMin.toString(), path, address, deadline)
-			const tx = await routerContract.swapExactETHForTokens(
-				amountOutMin.toString(),
-				path,
-				address,
-				deadline,
-				{ value: value.toString() }
-			)
-			console.log(tx)
+			try {
+				const routerContract = new ethers.Contract(
+					UNISWAP_ROUTER_ADDRESS,
+					UNISWAP_V2_ROUTER_ABI,
+					signer
+				)
+				console.log(amountOutMin.toString(), path, address, deadline)
+				const tx = await routerContract.swapExactETHForTokens(
+					amountOutMin.toString(),
+					path,
+					address,
+					deadline,
+					{ value: value.toString() }
+				)
+				console.log(tx)
+			} catch (error) {
+				console.error(error)
+			}
 		}
 	}
 
@@ -163,7 +172,7 @@ function Swap() {
 					<InputGroup size="lg">
 						<Input
 							type="number"
-							focusBorderColor={validAmountCheck ? null : "red.400"}
+							focusBorderColor={validAmountCheck !== false ? null : "red.400"}
 							isInvalid={validAmountCheck === false}
 							placeholder="0.0"
 							onChange={handleInput}
