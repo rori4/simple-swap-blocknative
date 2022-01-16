@@ -25,7 +25,6 @@ import { ethers } from "ethers"
 import { RPC_PROVIDER_URL } from "../../constants"
 import {
 	useSetup,
-	useTokenBalances,
 	useWallet,
 	useWalletBalance,
 } from "../../context/Onboard/Context"

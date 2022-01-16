@@ -5,6 +5,7 @@ import { Spinner, Text, Box, Button } from "@chakra-ui/react"
 import { gql, NetworkStatus, useQuery } from "@apollo/client"
 import moment from "moment"
 import { AiOutlineSearch } from "react-icons/ai"
+import { shortenAddress } from "../../helpers"
 
 const GET_PAIR_SWAPS = gql`
 	query GetPairSwaps($pair: String!) {
@@ -123,7 +124,13 @@ function LastSwapsTable({ pair }) {
 											</Text>
 										</Td>
 										<Td>
-											<Text>{data.to}</Text>
+											<Link
+												href={`https://etherscan.io/address/${data.to}`}
+												target="_blank"
+												rel="noreferrer noopener"
+											>
+												<Text>{shortenAddress(data.to, 4)}</Text>
+											</Link>
 										</Td>
 										<Td>
 											<Link
