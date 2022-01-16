@@ -100,7 +100,7 @@ function Swap() {
 					path,
 					address,
 					deadline,
-					{ value: value.toString() }
+					{ value: value?.toString() }
 				)
 				console.log(tx)
 			} catch (error) {
