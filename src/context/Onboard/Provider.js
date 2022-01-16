@@ -54,7 +54,7 @@ export default function OnboardingProvider({ children }) {
 	useEffect(() => {
 		const initialization = {
 			dappId: BNC_API_KEY,
-			networkId: 1,
+			networkId: 1, // 42 KOVAN for testing
 			walletCheck: walletChecks,
 			walletSelect: {
 				heading: "Select a wallet to connect",
@@ -62,20 +62,23 @@ export default function OnboardingProvider({ children }) {
 			},
 			subscriptions: {
 				address: (address) => {
+					// console.log("address", address)
 					setState({ ...state, address })
 				},
 				balance: (balance) => {
+					// console.log("balance", balance)
 					const formattedBalance = ethers.utils.formatEther(balance || 0)
 					setTokenBalances({
 						...tokenBalances,
 						[MAIN_TOKEN_ADDRESS]: formattedBalance,
 					})
-					setState({ ...state, mainTokenBalance: formattedBalance })
 				},
 				network: (network) => {
+					// console.log("network", network)
 					setState({ ...state, network })
 				},
 				wallet: (wallet) => {
+					// console.log("wallet", wallet)
 					const provider = new ethers.providers.Web3Provider(wallet.provider)
 					setProvider(provider)
 					setState({ ...state, wallet })
@@ -101,20 +104,24 @@ export default function OnboardingProvider({ children }) {
 
 	const checkBalances = async () => {
 		if (state.address) {
-			const tokenBalancesPromises = arrayOfTokensToCheck.map((token) =>
-				checkTokenBalance(token)
-			)
-			const balances = await Promise.all(tokenBalancesPromises)
-			let ERC20tokenBalances = {}
-			for (let i = 0; i < balances.length; i++) {
-				const balance = balances[i]
-				const tokenAddress = arrayOfTokensToCheck[i]
-				ERC20tokenBalances[tokenAddress] = ethers.utils.formatUnits(
-					balance,
-					tokensToCheckMapping[tokenAddress].decimals
+			try {
+				const tokenBalancesPromises = arrayOfTokensToCheck.map((token) =>
+					checkTokenBalance(token)
 				)
+				const balances = await Promise.all(tokenBalancesPromises)
+				let ERC20tokenBalances = {}
+				for (let i = 0; i < balances.length; i++) {
+					const balance = balances[i]
+					const tokenAddress = arrayOfTokensToCheck[i]
+					ERC20tokenBalances[tokenAddress] = ethers.utils.formatUnits(
+						balance,
+						tokensToCheckMapping[tokenAddress].decimals
+					)
+				}
+				setTokenBalances({ ...tokenBalances, ...ERC20tokenBalances })
+			} catch (error) {
+				console.log("Error while trying to fetch balances", error)
 			}
-			setTokenBalances({ ...tokenBalances, ...ERC20tokenBalances })
 		}
 	}
 

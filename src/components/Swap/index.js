@@ -2,6 +2,7 @@
 import { Box, Flex } from "@chakra-ui/layout"
 import React, { useState, useEffect } from "react"
 import { useColorModeValue } from "@chakra-ui/react"
+import { useToast } from "@chakra-ui/react"
 import {
 	chakra,
 	Input,
@@ -23,7 +24,11 @@ import {
 	Percent,
 } from "@uniswap/sdk"
 import { ethers } from "ethers"
-import { RPC_PROVIDER_URL, UNISWAP_ROUTER_ADDRESS } from "../../constants"
+import {
+	RPC_PROVIDER_URL,
+	// RPC_PROVIDER_URL_KOVAN,
+	UNISWAP_ROUTER_ADDRESS,
+} from "../../constants"
 import {
 	useAddress,
 	useSetup,
@@ -39,12 +44,19 @@ const DAI = new Token(
 	18
 )
 
+// const DAI = new Token(
+// 	ChainId.KOVAN,
+// 	"0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa",
+// 	18
+// )
+
 const routerContract = new ethers.Contract(
 	UNISWAP_ROUTER_ADDRESS,
 	UNISWAP_V2_ROUTER_ABI
 )
 
 function Swap() {
+	const toast = useToast()
 	const wallet = useWallet()
 	const address = useAddress()
 	const setup = useSetup()
@@ -99,13 +111,20 @@ function Swap() {
 					signer
 				)
 				const tx = await routerContract.swapExactETHForTokens(
-					amountOutMin.toString(),
+					amountOutMin?.toString(),
 					path,
 					address,
 					deadline,
 					{ value: value?.toString() }
 				)
-				console.log(tx)
+				await tx.wait() // receipt
+				toast({
+					title: "Transaction has been confirmed.",
+					description: "The swap ETH/DAI was successful",
+					status: "success",
+					duration: 9000,
+					isClosable: true,
+				})
 			} catch (error) {
 				console.error(error)
 			}
