@@ -18,3 +18,6 @@ export const UNISWAP_GRAPHQL_ENDPOINT =
 	"https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
 
 export const ETH_DAI_PAIR = "0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"
+
+export const UNISWAP_ROUTER_ADDRESS =
+	"0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"

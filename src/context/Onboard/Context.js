@@ -60,5 +60,5 @@ export const useSigner = () => {
 		const signer = new ethers.providers.Web3Provider(provider).getSigner()
 		return signer
 	}
-	return {}
+	return null
 }

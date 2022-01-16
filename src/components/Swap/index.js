@@ -22,12 +22,15 @@ import {
 	Percent,
 } from "@uniswap/sdk"
 import { ethers } from "ethers"
-import { RPC_PROVIDER_URL } from "../../constants"
+import { RPC_PROVIDER_URL, UNISWAP_ROUTER_ADDRESS } from "../../constants"
 import {
+	useAddress,
 	useSetup,
+	useSigner,
 	useWallet,
 	useWalletBalance,
 } from "../../context/Onboard/Context"
+import { UNISWAP_V2_ROUTER_ABI } from "../../abis"
 
 const DAI = new Token(
 	ChainId.MAINNET,
@@ -35,9 +38,16 @@ const DAI = new Token(
 	18
 )
 
+const routerContract = new ethers.Contract(
+	UNISWAP_ROUTER_ADDRESS,
+	UNISWAP_V2_ROUTER_ABI
+)
+
 function Swap() {
 	const wallet = useWallet()
+	const address = useAddress()
 	const setup = useSetup()
+	const signer = useSigner()
 	const ethBalance = useWalletBalance()
 	const [validAmountCheck, setValidAmountCheck] = useState(null)
 	const [inputAmount, setInputAmount] = useState(0)
@@ -56,6 +66,12 @@ function Swap() {
 	}, [])
 
 	useEffect(() => {
+		if (signer) {
+			routerContract.connect(signer)
+		}
+	}, [signer])
+
+	useEffect(() => {
 		fetchPrices()
 	}, [inputAmount])
 
@@ -64,6 +80,25 @@ function Swap() {
 		console.log(ethBalance)
 		console.log(e.target.value)
 		setValidAmountCheck(Number(e.target.value) <= Number(ethBalance))
+	}
+
+	const handleSwap = async () => {
+		if (address) {
+			const routerContract = new ethers.Contract(
+				UNISWAP_ROUTER_ADDRESS,
+				UNISWAP_V2_ROUTER_ABI,
+				signer
+			)
+			console.log(amountOutMin.toString(), path, address, deadline)
+			const tx = await routerContract.swapExactETHForTokens(
+				amountOutMin.toString(),
+				path,
+				address,
+				deadline,
+				{ value: value.toString() }
+			)
+			console.log(tx)
+		}
 	}
 
 	const fetchPrices = async () => {
@@ -81,7 +116,7 @@ function Swap() {
 				),
 				TradeType.EXACT_INPUT
 			)
-			const slippageTolerance = new Percent("50", "10000") // 50 bips, or 0.50%
+			const slippageTolerance = new Percent("100", "10000") // 100 bips, or 1%
 
 			const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw // needs to be converted to e.g. hex
 			const parsedAmount = ethers.utils.formatUnits(amountOutMin.toString(), 18)
@@ -158,7 +193,12 @@ function Swap() {
 				</Box>
 				<Box mt={6} w="full">
 					{wallet ? (
-						<Button w="full" size="lg" disabled={!validAmountCheck}>
+						<Button
+							w="full"
+							size="lg"
+							disabled={!validAmountCheck}
+							onClick={handleSwap}
+						>
 							SWAP
 						</Button>
 					) : (
