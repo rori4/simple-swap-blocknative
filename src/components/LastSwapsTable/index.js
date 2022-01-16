@@ -33,18 +33,14 @@ const GET_PAIR_SWAPS = gql`
 `
 
 function LastSwapsTable({ pair }) {
-	const { loading, error, data, refetch, networkStatus } = useQuery(
-		GET_PAIR_SWAPS,
-		{
-			variables: { pair },
-			notifyOnNetworkStatusChange: true,
-		}
-	)
+	const { loading, data, refetch, networkStatus } = useQuery(GET_PAIR_SWAPS, {
+		variables: { pair },
+		notifyOnNetworkStatusChange: true,
+	})
 	const [swaps, setSwaps] = useState([])
 	useEffect(() => {
 		if (data) {
 			const { swaps } = data
-			console.log(swaps)
 			setSwaps(swaps)
 		}
 	}, [data, networkStatus, loading])
@@ -156,7 +152,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
@@ -176,7 +172,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
@@ -206,7 +202,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
@@ -230,7 +226,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
@@ -254,7 +250,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
@@ -280,7 +276,7 @@ function LastSwapsTable({ pair }) {
 												},
 												textTransform: "uppercase",
 												// eslint-disable-next-line react-hooks/rules-of-hooks
-												color: useColorModeValue("gray.400", "gray.400"),
+												color: "gray.400",
 												fontSize: "xs",
 												fontWeight: "bold",
 												letterSpacing: "wider",
